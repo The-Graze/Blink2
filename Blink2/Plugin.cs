@@ -1,5 +1,6 @@
 ﻿using BepInEx;
 using System;
+using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -18,9 +19,18 @@ namespace Blink2
     class BlinkManager : MonoBehaviour
     {
         public GorillaEyeExpressions eye;
-        void Start()
+
+        void Start() => OnEnable();
+
+        void OnEnable()
         {
-            InvokeRepeating(nameof(RandomChance), 5f, 5f);
+            RandomChance();
+        }
+
+        IEnumerator Blonk()
+        {
+            yield return new WaitForSeconds(5);
+            RandomChance();
         }
 
         void RandomChance()
@@ -29,6 +39,10 @@ namespace Blink2
             {
                 BlinkEyeEffect();
             }
+            else
+            {
+                StartCoroutine(Blonk());
+            }
         }
 
         void BlinkEyeEffect()
@@ -36,6 +50,7 @@ namespace Blink2
             eye.overrideDuration = eye.screamDuration;
             eye.overrideUV = new Vector2(0.25f, 0);
             eye.IsEyeExpressionOverriden = true;
+            StartCoroutine(Blonk());
         }
     }
 }
