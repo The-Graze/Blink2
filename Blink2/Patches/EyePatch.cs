@@ -1,19 +1,19 @@
 ﻿using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
+using GorillaExtensions;
 using Random = UnityEngine.Random;
 
 namespace Blink2.Patches
 {
     [HarmonyPatch(typeof(GorillaEyeExpressions))]
-    [HarmonyPatch("Awake", MethodType.Normal)]
+    [HarmonyPatch("CheckEyeEffects", MethodType.Normal)]
     static class EyePatch
     {
         private static void Postfix(GorillaEyeExpressions __instance)
         {
-            __instance.gameObject.AddComponent<BlinkManager>().eye = __instance;
+            if (!__instance.gameObject.GetOrAddComponent<BlinkManager>().running)
+            {
+                __instance.gameObject.GetOrAddComponent<BlinkManager>().RandomChance();
+            }
         }
     }
 }

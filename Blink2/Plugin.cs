@@ -19,9 +19,7 @@ namespace Blink2
     class BlinkManager : MonoBehaviour
     {
         public GorillaEyeExpressions eye;
-
-        void Start() => OnEnable();
-
+        public bool running;
         void OnEnable()
         {
             RandomChance();
@@ -33,8 +31,14 @@ namespace Blink2
             RandomChance();
         }
 
-        void RandomChance()
+        void OnDisable()
         {
+            running = false;
+        }
+
+        public void RandomChance()
+        {
+            running = true;
             if (Random.Range(1, 6) == 3)
             {
                 BlinkEyeEffect();
@@ -47,6 +51,10 @@ namespace Blink2
 
         void BlinkEyeEffect()
         {
+            if (eye == null)
+            { 
+                eye = gameObject.GetComponent<GorillaEyeExpressions>();
+            }
             eye.overrideDuration = eye.screamDuration;
             eye.overrideUV = new Vector2(0.25f, 0);
             eye.IsEyeExpressionOverriden = true;
